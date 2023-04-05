@@ -20,8 +20,17 @@ router.post('/', async (req, res) => {
 // Get all snippets for a user
 router.get('/:userId', async (req, res) => {
   const userId = req.params.userId;
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
+  const skip = (page - 1) * limit;
+
   const db = await getDb();
-  const snippets = await db.collection(snippetsCollection).find({ userId }).toArray();
+  const snippets = await db
+    .collection(snippetsCollection)
+    .find({ userId })
+    .skip(skip)
+    .limit(limit)
+    .toArray();
   res.send(snippets);
 });
 
