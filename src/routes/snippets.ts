@@ -1,7 +1,7 @@
 import express from 'express';
 import { ObjectId } from 'mongodb';
 import { getDb } from '../db';
-import { Snippet, SnippetInput } from '../models/Snippet';
+import { Snippet, SnippetInput } from '../models/snippet';
 
 const router = express.Router();
 const snippetsCollection = 'snippets';
