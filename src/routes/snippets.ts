@@ -10,17 +10,34 @@ const snippetsCollection = 'snippets';
 // Create a snippet
 router.post('/', authenticate, async (req, res) => {
   const snippetInput: SnippetInput = req.body;
+  const currentUser = (req as any).user;
   const db = await getDb();
-  console.log('db:', db);
-  const result = await db.collection(snippetsCollection).insertOne(snippetInput);
-  const snippet: Snippet = { ...snippetInput, _id: result.insertedId };
+
+  const currentTimestamp = new Date();
+
+  const snippetToInsert = { 
+    ...snippetInput,
+    email: currentUser.email,
+    createdAt: currentTimestamp,
+    updatedAt: currentTimestamp
+  };
+
+  const result = await db.collection(snippetsCollection).insertOne(snippetToInsert);
+  const snippet: Snippet = { ...snippetToInsert, _id: result.insertedId };
+
   res.status(201).send(snippet);
 });
 
 
 // Get all snippets for a user
-router.get('/:userId', authenticate, async (req, res) => {
-  const userId = req.params.userId;
+router.get('/:email', authenticate, async (req, res) => {
+  const email = req.params.email
+  const currentUser = (req as any).user;
+
+  if (currentUser.email !== email && currentUser.role !== 'admin') {
+    return res.status(403).send('Access denied. You can only view your own snippets.');
+  }
+
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 10;
   const skip = (page - 1) * limit;
@@ -28,7 +45,7 @@ router.get('/:userId', authenticate, async (req, res) => {
   const db = await getDb();
   const snippets = await db
     .collection(snippetsCollection)
-    .find({ userId })
+    .find({ email })
     .skip(skip)
     .limit(limit)
     .toArray();
@@ -40,7 +57,12 @@ router.put('/:snippetId', authenticate, async (req, res) => {
   const snippetId = new ObjectId(req.params.snippetId);
   const snippetUpdate: Partial<SnippetInput> = req.body;
   const db = await getDb();
-  await db.collection(snippetsCollection).updateOne({ _id: snippetId }, { $set: snippetUpdate });
+
+  await db.collection(snippetsCollection).updateOne(
+    { _id: snippetId },
+    { $set: { ...snippetUpdate, updatedAt: new Date() } }
+  );
+  
   const updatedSnippet = await db.collection(snippetsCollection).findOne({ _id: snippetId });
   res.send(updatedSnippet);
 });

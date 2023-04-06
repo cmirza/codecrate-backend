@@ -22,3 +22,4 @@ CodeCrate is a code snippet application written in TypeScript, React and Vite on
 - Setup MongoDB, backend supports snippet creation, updating, deletion and retrieval of all snippets
 - Added pagination of snippets (not sure if this will be used)
 - Added basic user auth with JWT
+- Added user roles and permissions

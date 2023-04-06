@@ -22,10 +22,15 @@ router.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(userInput.password, 10);
 
     // Store user in DB
-    const result = await db.collection(usersCollection).insertOne({ ...userInput, password: hashedPassword });
+    const newUser = { ...userInput, password: hashedPassword, role: 'user'};
+    const result = await db.collection(usersCollection).insertOne(newUser);
 
     // Generate JWT
-    const token = jwt.sign({ _id: result.insertedId, email: userInput.email }, jwtSecret, { expiresIn: '1h' });
+    const token = jwt.sign(
+        { _id: result.insertedId, email: newUser.email, role: newUser.role },
+        jwtSecret,
+        { expiresIn: '1h' }
+    );
 
     // Sent JWT to client
     res.status(201).send({ token });
@@ -48,7 +53,11 @@ router.post('/login', async (req, res) => {
     }
 
     // Generate JWT
-    const token = jwt.sign({ _id: user._id, email: user.email }, jwtSecret, { expiresIn: '1h' });
+    const token = jwt.sign(
+        { _id: user._id, email: user.email, role: user.role },
+        jwtSecret,
+        { expiresIn: '1h' }
+    );
 
     // Sent JWT to client
     res.send({ token });

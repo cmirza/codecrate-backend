@@ -5,12 +5,16 @@ export interface Snippet {
   title: string;
   content: string;
   collection: string;
-  userId: string;
+  email: string;
+  language: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface SnippetInput {
   title: string;
   content: string;
   collection: string;
-  userId: string;
+  email: string;
+  language: string;
 }

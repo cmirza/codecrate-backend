@@ -13,9 +13,16 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
     const token = authHeader.split(' ')[1];
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET || '');
-        (req as any).user = decoded;
+        (req as any).user = { ...(decoded as any), role: (decoded as any).role };
         next();
     } catch (error) {
         return res.status(401).send('Access denied.');
     }
+};
+
+export const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
+    if ((req as any).user.role !== 'admin') {
+        return res.status(403).send('Access denied. Admin privileges required.');
+    }
+    next();
 };
