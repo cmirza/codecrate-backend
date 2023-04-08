@@ -23,3 +23,8 @@ CodeCrate is a code snippet application written in TypeScript, React and Vite on
 - Added pagination of snippets (not sure if this will be used)
 - Added basic user auth with JWT
 - Added user roles and permissions
+
+### April 7, 2023
+
+- Added basic backend search implemented
+- Created some administrative scripts to insert fields in DB and migrate DB data
