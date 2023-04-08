@@ -1,8 +1,8 @@
 import { MongoClient, MongoClientOptions } from 'mongodb';
 
-const MONGO_URI = 'mongodb+srv://codecrate:56vknTGJTB1sWgg3@cluster0.igcawnq.mongodb.net/?retryWrites=true&w=majority';
-const DATABASE_NAME = 'test';
-const SNIPPETS_COLLECTION = 'snippets';
+const MONGO_URI = process.env.MONGODB_URI || '';
+const DATABASE_NAME = 'codecrate';
+const COLLECTION = 'snippets';
 const LANGUAGE_TO_ADD = 'javascript';
 
 async function main() {
@@ -11,7 +11,7 @@ async function main() {
   try {
     await client.connect();
     const db = client.db(DATABASE_NAME);
-    const snippetsCollection = db.collection(SNIPPETS_COLLECTION);
+    const snippetsCollection = db.collection(COLLECTION);
 
     const result = await snippetsCollection.updateMany(
       { language: { $exists: false } },

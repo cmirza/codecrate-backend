@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-const uri = 'mongodb+srv://codecrate:56vknTGJTB1sWgg3@cluster0.igcawnq.mongodb.net/?retryWrites=true&w=majority';
+const uri = process.env.MONGODB_URI || '';
 const collectionName = 'users'; // update this to the name of the collection you want to migrate
 
 (async () => {
