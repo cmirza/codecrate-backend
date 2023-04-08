@@ -28,6 +28,28 @@ router.post('/', authenticate, async (req, res) => {
   res.status(201).send(snippet);
 });
 
+// Search snippets
+router.get('/search', authenticate, async (req, res) => {
+  const searchQuery = req.query.q as string;
+  const currentUser = (req as any).user;
+  const email = currentUser.email;
+
+  const db = await getDb();
+  const snippets = await db
+    .collection(snippetsCollection)
+    .find({ 
+      email: email,
+      $or: [
+        { title: { $regex: searchQuery, $options: 'i' } },
+        { content: { $regex: searchQuery, $options: 'i' } },
+        { collection: { $regex: searchQuery, $options: 'i' } },
+        { language: { $regex: searchQuery, $options: 'i' } }
+      ]
+    })
+    .toArray();
+
+    res.send(snippets);
+});
 
 // Get all snippets for a user
 router.get('/:email', authenticate, async (req, res) => {
@@ -62,7 +84,7 @@ router.put('/:snippetId', authenticate, async (req, res) => {
     { _id: snippetId },
     { $set: { ...snippetUpdate, updatedAt: new Date() } }
   );
-  
+
   const updatedSnippet = await db.collection(snippetsCollection).findOne({ _id: snippetId });
   res.send(updatedSnippet);
 });
