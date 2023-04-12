@@ -2,9 +2,9 @@
 
 # codecrate-backend
 
-Repository for CodeCrate frontend.
+Repository for CodeCrate backend.
 
-CodeCrate is a code snippet application written in TypeScript, React and Vite on the front end and Node.js, Express and MongoDB on the back end.
+CodeCrate is a code snippet management application. The backend utilizes Node.js, Express and MongoDB.
 
 ## Milestones
 
@@ -28,3 +28,4 @@ CodeCrate is a code snippet application written in TypeScript, React and Vite on
 
 - Added basic backend search implemented
 - Created some administrative scripts to insert fields in DB and migrate DB data
+- Added snippet tagging functionality

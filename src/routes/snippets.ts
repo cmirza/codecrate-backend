@@ -19,7 +19,8 @@ router.post('/', authenticate, async (req, res) => {
     ...snippetInput,
     email: currentUser.email,
     createdAt: currentTimestamp,
-    updatedAt: currentTimestamp
+    updatedAt: currentTimestamp,
+    tags: snippetInput.tags || []
   };
 
   const result = await db.collection(snippetsCollection).insertOne(snippetToInsert);
@@ -49,6 +50,21 @@ router.get('/search', authenticate, async (req, res) => {
     .toArray();
 
     res.send(snippets);
+});
+
+// Browse snippets by tag
+router.get('/tags/:tag', authenticate, async (req, res) => {
+  const tag = req.params.tag;
+  const currentUser = (req as any).user;
+  const email = currentUser.email;
+
+  const db = await getDb();
+  const snippets = await db
+    .collection(snippetsCollection)
+    .find({ email, tags: { $elemMatch: { $eq: tag } } })
+    .toArray();
+
+  res.send(snippets);
 });
 
 // Get all snippets for a user

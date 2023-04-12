@@ -9,6 +9,7 @@ export interface Snippet {
   language: string;
   createdAt: Date;
   updatedAt: Date;
+  tags?: string[];
 }
 
 export interface SnippetInput {
@@ -17,4 +18,5 @@ export interface SnippetInput {
   collection: string;
   email: string;
   language: string;
+  tags?: string[];
 }
