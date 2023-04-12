@@ -28,4 +28,6 @@ CodeCrate is a code snippet management application. The backend utilizes Node.js
 
 - Added basic backend search implemented
 - Created some administrative scripts to insert fields in DB and migrate DB data
+
+#### April 11, 2023
 - Added snippet tagging functionality
